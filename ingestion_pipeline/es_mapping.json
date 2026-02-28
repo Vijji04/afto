@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "properties": {
+      "name":         { "type": "text", "analyzer": "standard" },
+      "description":  { "type": "text", "analyzer": "standard" },
+      "price":        { "type": "float" },
+      "currency":     { "type": "keyword" },
+      "category":     { "type": "keyword" },
+      "subcategory":  { "type": "keyword" },
+      "availability": { "type": "keyword" },
+      "images":       { "type": "keyword" }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ingestion-pipeline"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "dagster",
+    "dagster-webserver",
+    "psycopg2-binary",
+    "opensearch-py",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-mock"]
+
+[tool.dagster]
+module_name = "ingestion_pipeline.repository"
+
+[tool.pytest.ini_options]
+testpaths = ["ingestion_pipeline/tests"]
+
+[tool.setuptools.packages.find]
+include = ["ingestion_pipeline*"]

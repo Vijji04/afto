@@ -123,7 +123,7 @@ Run the `afto_pipeline` job to load data from the crawler output into PostgreSQL
 
 ```
 RDS_HOST=localhost
-RDS_DB=afto
+RDS_DB=afto-database
 RDS_USER=postgres
 RDS_PASSWORD=yourpassword
 OPENSEARCH_HOST=http://localhost:9200
@@ -140,63 +140,102 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 ## Schema
 
-TABLE categories (
-id UUID PRIMARY KEY,
-name TEXT UNIQUE NOT NULL,
-created_at TIMESTAMP DEFAULT NOW()
-);
+Database Schema
 
-TABLE subcategories (
-id UUID PRIMARY KEY,
-name TEXT NOT NULL,
-category_id UUID NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
-created_at TIMESTAMP DEFAULT NOW(),
-UNIQUE(name, category_id)
-);
-TABLE merchants (
-id UUID PRIMARY KEY,
-name TEXT NOT NULL,
-stripe_account_id TEXT UNIQUE,
-verification_status TEXT DEFAULT 'pending',
-created_at TIMESTAMP DEFAULT NOW(),
-charges_enabled BOOLEAN DEFAULT false,
-payouts_enabled BOOLEAN DEFAULT false,
-updates_enabled BOOLEAN DEFAULT false
-);
+# Categories
 
-TABLE products (
-id TEXT PRIMARY KEY,
-name TEXT NOT NULL,
-description TEXT,
-price NUMERIC(10,2) NOT NULL,
-currency TEXT NOT NULL,
-availability TEXT,
-images TEXT[],
-category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
-subcategory_id UUID REFERENCES subcategories(id) ON DELETE SET NULL,
-merchant_id UUID REFERENCES merchants(id) ON DELETE SET NULL,
-created_at TIMESTAMP DEFAULT NOW()
-);
+id (UUID, primary key)
 
-TABLE orders (
-id UUID
-merchant_id
-amount NUMERIC(10,2) NOT NULL,
-currency TEXT DEFAULT 'usd',
-platform_fee NUMERIC(10,2),
-status TEXT DEFAULT 'pending',
-stripe_session_id TEXT,
-stripe_payment_intent_id TEXT,
-customer_email TEXT,
-customer_name TEXT,
-created_at TIMESTAMP DEFAULT NOW(),
-updated_at TIMESTAMP DEFAULT NOW()
-);
+name (unique, required)
 
-TABLE order_items (
-id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-product_id TEXT NOT NULL REFERENCES products(id),
-quantity INTEGER NOT NULL,
-price_at_purchase NUMERIC(10,2) NOT NULL
-);
+created_at (timestamp)
+
+# Subcategories
+
+id (UUID, primary key)
+
+name (required)
+
+category_id (references Categories)
+
+created_at (timestamp)
+
+unique constraint on (name, category_id)
+
+# Merchants
+
+id (UUID, primary key)
+
+name (required)
+
+stripe_account_id (unique)
+
+verification_status (default: pending)
+
+charges_enabled (boolean)
+
+payouts_enabled (boolean)
+
+updates_enabled (boolean)
+
+created_at (timestamp)
+
+# Products
+
+id (text, primary key)
+
+name (required)
+
+description
+
+price (numeric)
+
+currency (required)
+
+availability
+
+images (array of text)
+
+category_id (references Categories)
+
+subcategory_id (references Subcategories, optional)
+
+merchant_id (references Merchants, optional)
+
+created_at (timestamp)
+
+# Orders
+
+id (UUID, primary key)
+
+merchant_id (references Merchants)
+
+amount (numeric)
+
+currency (default: USD)
+
+platform_fee (numeric)
+
+status (pending / paid / failed / cancelled)
+
+stripe_session_id
+
+stripe_payment_intent_id
+
+customer_email
+
+customer_name
+
+created_at (timestamp)
+
+updated_at (timestamp)
+
+# Order Items
+
+id (UUID, primary key)
+
+order_id (references Orders)
+
+product_id (references Products)
+
+quantity (integer)

@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import path from "path";
 
+// Load root .env first, then backend/.env (overrides with Stripe keys for local dev)
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../.env"), override: true });
 
 export const config = {
   pg: {

@@ -77,8 +77,13 @@ export function CheckoutTemplate() {
         setError(
           "Items from different merchants cannot be checked out together. Please update your cart."
         );
-      } else {
+      } else if (
+        message.startsWith("API error:") ||
+        message === "Failed to fetch"
+      ) {
         setError("Failed to initiate payment. Please try again.");
+      } else {
+        setError(message);
       }
     } finally {
       setLoading(false);

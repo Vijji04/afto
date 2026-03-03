@@ -1,11 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SearchBar } from "@/components/organisms/SearchBar";
 import { useCart } from "@/context/CartContext";
 
 export function Header() {
   const { cartCount } = useCart();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-beige bg-cream/95 backdrop-blur-sm">
@@ -26,7 +29,7 @@ export function Header() {
           aria-label="Cart"
         >
           Cart
-          {cartCount > 0 && (
+          {mounted && cartCount > 0 && (
             <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-terracotta text-[10px] font-bold text-white">
               {cartCount}
             </span>

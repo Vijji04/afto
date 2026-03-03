@@ -37,6 +37,10 @@ export class PostgresService {
     };
     const orderBy = sortMap[sort] || "p.created_at DESC";
 
+    // Prioritize products from merchants with charges_enabled so checkout works
+    const orderByWithMerchant =
+      `COALESCE(m.charges_enabled, false) DESC, ${orderBy}`;
+
     const offset = (page - 1) * limit;
     params.push(limit, offset);
 
@@ -50,8 +54,9 @@ export class PostgresService {
       FROM products p
       JOIN categories c ON c.id = p.category_id
       LEFT JOIN subcategories s ON s.id = p.subcategory_id
+      LEFT JOIN merchants m ON m.id = p.merchant_id
       ${whereClause}
-      ORDER BY ${orderBy}
+      ORDER BY ${orderByWithMerchant}
       LIMIT $${paramIdx++} OFFSET $${paramIdx++}
     `;
 

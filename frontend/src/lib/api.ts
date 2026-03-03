@@ -12,7 +12,16 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, options);
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    let message = `API error: ${res.status} ${res.statusText}`;
+    try {
+      const body = await res.json();
+      if (body && typeof body.error === "string") {
+        message = body.error;
+      }
+    } catch {
+      // Response body is not JSON, keep default message
+    }
+    throw new Error(message);
   }
   return res.json();
 }

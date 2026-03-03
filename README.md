@@ -110,6 +110,7 @@ npm run scrape   # outputs to crawler/output/products_canonical.json
 pip install -r requirements.txt
 cd ingestion_pipeline
 dagster dev   # opens Dagster UI at http://localhost:3000 OR
+dagster job execute -j ingestion_job
 
 ```
 

@@ -239,3 +239,7 @@ order_id (references Orders)
 product_id (references Products)
 
 quantity (integer)
+
+# Checkout flow for backend
+
+![Checkout Flow](screens-shot/checkout-flow.png)

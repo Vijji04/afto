@@ -240,6 +240,6 @@ product_id (references Products)
 
 quantity (integer)
 
-# Checkout flow for backend
+# Checkout flow for backend-checkout flow
 
 ![Checkout Flow](screens-shot/checkout-flow.png)

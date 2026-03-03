@@ -100,6 +100,26 @@ def test_load_postgres_null_subcategory_yields_null_subcategory_id(mock_pg_conne
     assert None in product_tuple
 
 
+def test_load_postgres_upsert_includes_images(mock_pg_connect, expected_flat_products):
+    _, _, mock_cursor = mock_pg_connect
+    context = build_op_context()
+
+    load_postgres_op(context, expected_flat_products)
+
+    prod_calls = mock_cursor.executemany.call_args_list
+    sql = prod_calls[0][0][0]
+    assert "images" in sql
+    assert "images" in sql.split("ON CONFLICT")[1]  # images in the UPDATE clause too
+
+    params = prod_calls[0][0][1]
+    assert params[0][-3] == ["https://cdn.example.com/img1.jpg"]  # first product's images
+    assert params[1][-3] == []  # second product has empty images
+    assert params[2][-3] == [
+        "https://cdn.example.com/rice1.jpg",
+        "https://cdn.example.com/rice2.jpg",
+    ]
+
+
 def test_load_postgres_commits_on_success(mock_pg_connect, expected_flat_products):
     _, mock_conn, _ = mock_pg_connect
     context = build_op_context()

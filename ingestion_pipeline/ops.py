@@ -67,14 +67,15 @@ RETURNING id;
 """
 
 _UPSERT_PRODUCT_SQL = """
-INSERT INTO products (id, name, description, price, currency, availability, category_id, subcategory_id)
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+INSERT INTO products (id, name, description, price, currency, availability, images, category_id, subcategory_id)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 ON CONFLICT (id) DO UPDATE SET
     name           = EXCLUDED.name,
     description    = EXCLUDED.description,
     price          = EXCLUDED.price,
     currency       = EXCLUDED.currency,
     availability   = EXCLUDED.availability,
+    images         = EXCLUDED.images,
     category_id    = EXCLUDED.category_id,
     subcategory_id = EXCLUDED.subcategory_id;
 """
@@ -128,6 +129,7 @@ def load_postgres_op(context: OpExecutionContext, products: list) -> None:
                 p["price"],
                 p["currency"],
                 p["availability"],
+                p["images"],
                 cat_map[p["category"]],
                 subcat_map.get((p["subcategory"], p["category"])),
             )

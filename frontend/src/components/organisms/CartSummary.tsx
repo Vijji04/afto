@@ -5,13 +5,19 @@ import { useCart } from "@/context/CartContext";
 import { CartItemRow } from "@/components/molecules/CartItemRow";
 
 export function CartSummary() {
-  const { cartItems, cartTotal, cartCount, removeItem, updateQuantity, clearCart } =
-    useCart();
+  const {
+    cartItems,
+    cartTotal,
+    cartCount,
+    removeItem,
+    updateQuantity,
+    clearCart,
+  } = useCart();
 
   if (cartCount === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="text-brown mb-4">Your cart is empty</p>
+        <p className="text-brown mb-4">Your cart is Empty</p>
         <Link
           href="/"
           className="rounded-lg bg-terracotta px-6 py-2.5 text-sm font-medium text-white hover:bg-terracotta/90 transition"

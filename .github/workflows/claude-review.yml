@@ -22,7 +22,7 @@ jobs:
 
       - name: Send to Claude
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           jq -n --arg diff "$(cat diff.txt)" '{
             model: "claude-sonnet-4-20250514",
